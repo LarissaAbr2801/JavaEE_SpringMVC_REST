@@ -16,12 +16,16 @@ public class PostRepository {
     private final AtomicInteger postsCounter = new AtomicInteger(0);
 
     public List<Post> all() {
-        return new ArrayList<>(posts.values());
+        return posts.values()
+                .stream()
+                .filter(x -> !x.isRemoved())
+                .toList();
     }
 
     public Optional<Post> getById(long id) {
         return posts.values().stream()
                 .filter(x -> x.getId() == id)
+                .filter(x -> !x.isRemoved())
                 .findAny();
     }
 
@@ -30,7 +34,7 @@ public class PostRepository {
 
             var postInList = getById(post.getId());
 
-            if (postInList.isPresent()) {
+            if (postInList.isPresent() && !postInList.get().isRemoved()) {
                 posts.put(postInList.get().getId(), post);
             } else {
                 throw new NotFoundException("Невозможно сохранить пост!");
@@ -46,5 +50,7 @@ public class PostRepository {
         if (!posts.values().removeIf(post -> post.getId() == id)) {
             throw new NotFoundException();
         }
+        Optional<Post> post = getById(id);
+        post.ifPresent(value -> value.setRemoved(true));
     }
 }
