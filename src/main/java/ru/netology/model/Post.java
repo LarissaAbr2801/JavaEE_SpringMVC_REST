@@ -6,6 +6,7 @@ public class Post {
 
     private long id;
     private String content;
+    private volatile boolean removed = false;
 
 
     public long getId() {
@@ -24,6 +25,14 @@ public class Post {
         this.content = content;
     }
 
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -36,4 +45,5 @@ public class Post {
     public int hashCode() {
         return Objects.hash(id, content);
     }
+
 }
