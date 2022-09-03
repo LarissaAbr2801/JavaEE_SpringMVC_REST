@@ -7,6 +7,7 @@ import ru.netology.model.Post;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 // Stub
 @Repository
@@ -19,7 +20,7 @@ public class PostRepository {
         return posts.values()
                 .stream()
                 .filter(x -> !x.isRemoved())
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public Optional<Post> getById(long id) {
